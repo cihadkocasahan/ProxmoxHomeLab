@@ -3,7 +3,7 @@
 ```mermaid
 graph LR
     subgraph CLIENT["AI Client (Windows)"]
-        AI["Kiro / Claude"]
+        AI["Antigravity / Kiro / Claude"]
         PROXY["stdio_proxy.py\nJSON-RPC over stdin/stdout"]
     end
 

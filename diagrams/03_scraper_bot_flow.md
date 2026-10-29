@@ -2,13 +2,14 @@
 
 ```mermaid
 sequenceDiagram
-    participant AGENT as AI Agent (Kiro)
+    participant AGENT as AI Agent (Antigravity / Kiro)
     participant N8N as N8N Workflow<br/>(LXC 141 :5678)
     participant RMQ as RabbitMQ<br/>(LXC 141)
     participant WORKER as scraper-worker-01<br/>(VM 201)
     participant CHROME as Chrome :9222<br/>(DevTools Protocol)
     participant HERMES as Hermes<br/>(LXC 180)
     participant TG as Telegram
+    participant USER as Ben (Telefon)
 
     Note over N8N: Cron trigger every 15 min
 
@@ -23,8 +24,8 @@ sequenceDiagram
 
     alt New items found
         N8N->>HERMES: Send notification
-        HERMES->>TG: "New listing found: ..."
-        TG-->>AGENT: Push notification
+        HERMES->>TG: "Yeni veri bulundu: ..."
+        TG-->>USER: Anlık bildirim (Mobil / Masaüstü)
     else No change
         N8N->>N8N: Store state, wait for next run
     end

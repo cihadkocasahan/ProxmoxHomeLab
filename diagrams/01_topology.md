@@ -2,8 +2,8 @@
 
 ```mermaid
 graph TB
-    subgraph WS["Windows Workstation"]
-        KIRO["Kiro IDE / Claude Desktop\nMCP Client"]
+    subgraph WS["Windows İş İstasyonu"]
+        KIRO["Antigravity · Kiro IDE · Claude\nMCP İstemcileri"]
         P1["stdio_proxy.py"]
         P2["hermes_mcp_proxy.py"]
         P3["n8n_mcp_proxy.py"]
@@ -35,6 +35,7 @@ graph TB
             N8N["N8N\n:5678"]
             RMQ["RabbitMQ\n:5672/:15672"]
             MEM["Mem0\n:8888\npgvector"]
+            ROUTER9["9router\n:20128\nAI Gateway"]
         end
 
         subgraph LXC180["LXC 180 — hermes-agent (192.168.1.80)"]
@@ -47,6 +48,7 @@ graph TB
         end
 
         VM200["VM 200\nScraper-Donor\nstopped — template"]
+        VM210["VM 210\nAndroid-Malware-Analyzer\nstopped — template"]
     end
 
     INTERNET(["Internet\nTelegram / Discord\nTarget Sites"])
@@ -70,6 +72,7 @@ graph TB
     RMQ -->|master_results| N8N
     N8N -->|notification| HRM
     HRM <-->|bridge| INTERNET
+    HRM -->|AI tamamlama| ROUTER9
 
     VM200 -->|clone_resource| VMSCRAPER
 
