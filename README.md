@@ -6,6 +6,19 @@
 
 ---
 
+![Proxmox MCP Özel Web Dashboard](assets/proxmox-mcp-web-dashboard.png)
+*Özel ProxmoxMCP Web Kontrol Paneli (`:8000/dashboard`) — İhtiyaçtan geliştirdiğim, tüm LXC, VM ve konteyner kaynaklarını tek bakışta izleyip yönetebildiğim canlı arayüz.*
+
+<br>
+
+<p align="center">
+  <img src="assets/docker-host-workloads-modal.png" alt="Docker Host Konteyner İş Yükleri" width="460">
+  <br>
+  <em>LXC 141 (docker-host) Konteyner Detayı — N8N, Watchtower, Mem0 (pgvector) ve 9router servisleri.</em>
+</p>
+
+---
+
 ## Nasıl Başladı
 
 Aslında ilk motivasyon basitti: çocuklar için içerik filtreleme ve evdeki tüm cihazlarda reklam engelleme istiyordum — hem de her cihaza tek tek uğraşmadan. O sırada köşede toz toplamaya aday eski bir PC vardı; çöpe atmak yerine bir işe yarasın diye kullanmaya karar verdim.

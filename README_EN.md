@@ -6,6 +6,19 @@
 
 ---
 
+![Proxmox MCP Custom Web Dashboard](assets/proxmox-mcp-web-dashboard.png)
+*Custom ProxmoxMCP Web Dashboard (`:8000/dashboard`) — Built out of necessity to monitor and manage all LXC, VM, and container workloads at a glance.*
+
+<br>
+
+<p align="center">
+  <img src="assets/docker-host-workloads-modal.png" alt="Docker Host Container Workloads" width="460">
+  <br>
+  <em>LXC 141 (docker-host) Container Workloads — N8N, Watchtower, Mem0 (pgvector), and 9router services.</em>
+</p>
+
+---
+
 ## How It Started
 
 The motivation was simple: content filtering for the kids and network-wide ad blocking for every device in the house, without configuring each one separately. There was an old PC gathering dust in a corner — instead of throwing it away, I decided to put it to use.
