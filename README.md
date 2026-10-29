@@ -177,6 +177,17 @@ Credential yönetimi uygulama kodundan tamamen ayrı — merkezi bir secrets dos
 
 ---
 
+## Sırada Ne Var? (Gelecek Vizyonu)
+
+Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunluğa ulaştırdı. Bir sonraki faz, sisteme insan müdahalesine gerek kalmadan çalışan **"otonom refleksler"** kazandırmayı hedefliyor:
+
+- 🛡️ **Kendi Yarasını Saran Altyapı (Self-Healing):** Bir serviste çökme veya bellek sızıntısı olduğunda; AI ajanının logları (`docker_logs`, `exec_in_container`) inceleyip kök nedeni bulması, konteyneri kurtarması ve Telegram'a teşhis/çözüm raporu iletmesi.
+- 🔄 **Yerel GitOps Döngüsü (Gitea Webhook → Otomatik Dağıtım):** Gitea'ya `git push` yapıldığı anda hiçbir panele girmeden Proxmox içindeki ilgili servisin otomatik build edilip canlıya alınması.
+- 🧠 **Mühendislik Hafızası & Kod Tabanı Arama (Codebase RAG):** Yıllar içinde yazılan tüm Delphi, Python ve altyapı kodlarının Mem0 + pgvector ile semantik olarak indekslenmesi; yeni bir iş yaparken geçmiş tecrübelerin anında bağlama çağrılabilmesi.
+- 🔐 **Kritik İşlemler İçin İnteraktif Onay (Telegram 2FA):** Altyapıyı etkileyecek hassas veya yıkıcı işlemler (`remove_resource`, yedek silme vb.) için Telegram üzerinden tek tıkla çalışan `[Onayla / İptal]` buton mekanizması.
+
+---
+
 ## İlgili Projeler
 
 - **[Shadow-SVN](https://github.com/cihadkocasahan/shadow-svn)** — LXC 110'da çalışan SVN senkronizasyon motoru, açık kaynak.

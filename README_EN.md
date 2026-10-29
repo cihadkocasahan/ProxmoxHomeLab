@@ -187,6 +187,17 @@ Credential management is fully separated from application code — a central sec
 
 ---
 
+## What's Next? (Future Vision)
+
+The current implementation has matured the environment into a **"conversational, command-driven"** control plane. The next phase aims to equip the infrastructure with **"autonomous reflexes"** that operate without requiring manual intervention:
+
+- 🛡️ **Self-Healing Infrastructure:** In the event of service degradations or memory leaks, AI agents automatically inspect logs (`docker_logs`, `exec_in_container`), diagnose the root cause, restart the degraded service, and deliver a concise resolution report to Telegram.
+- 🔄 **Local GitOps Pipeline (Gitea Webhooks → Auto-Deploy):** Triggering zero-touch builds, tests, and container deployments directly on Proxmox upon every `git push` to Gitea, eliminating manual dashboard interaction.
+- 🧠 **Engineering Memory & Codebase RAG:** Semantically indexing past Delphi, Python, and infrastructure codebases into Mem0 and pgvector, enabling instant recall of past architectural patterns and implementations during active development.
+- 🔐 **Interactive 2FA Approvals for Critical Operations:** Requiring one-tap Telegram inline button verification (`[Approve / Reject]`) before executing destructive or high-impact MCP tool commands (`remove_resource`, backup pruning, etc.).
+
+---
+
 ## Related Projects
 
 - **[Shadow-SVN](https://github.com/cihadkocasahan/shadow-svn)** — SVN sync engine running in LXC 110, open-sourced.
