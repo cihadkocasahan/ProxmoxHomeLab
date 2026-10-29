@@ -19,30 +19,40 @@
 
 ---
 
-## How It Started
+## How It Started: An Infrastructure Journey Born Out of Necessity
 
+### 1. The Spark (Ad Blocking & Content Filtering)
 The motivation was simple: content filtering for the kids and network-wide ad blocking for every device in the house, without configuring each one separately. There was an old PC gathering dust in a corner — instead of throwing it away, I decided to put it to use.
 
 I installed AdGuard Home directly on the machine, no Proxmox yet. On the router, I changed the DNS address distributed via DHCP to AdGuard's IP. From that point, every phone, TV, computer, and guest's device was automatically filtered — no settings touched on any of them. This setup running on a few hundred MB of RAM was using almost none of the machine's capacity — and the rest of it sitting idle started to bother me. *"With this much capacity available, why just DNS?"* — that question was where everything began.
 
-I installed Proxmox VE on the machine. I configured the two SSDs as a ZFS mirror so that if one failed, the other would keep running with zero data loss. The primary reason for choosing Proxmox was the flexibility to run lightweight Linux LXC containers, Docker microservices, and full Windows virtual machines (VMs) for Delphi compilation and desktop testing side by side on the same bare metal. As the first step, I moved AdGuard into an LXC container; opening the door to a multi-service architecture.
+### 2. Hardware Resilience & Multi-OS Virtualization (Proxmox VE & ZFS Mirror)
+Instead of confining the hardware to a single service, I decided to evolve it into a production-grade server stack. I installed Proxmox VE on the machine. I configured the two SSDs as a ZFS mirror so that if one failed, the other would keep running with zero data loss. The primary reason for choosing Proxmox was the flexibility to run lightweight Linux LXC containers, Docker microservices, and full Windows virtual machines (VMs) for Delphi compilation and desktop testing side by side on the same bare metal. As the first step, I moved AdGuard into an LXC container; opening the door to a multi-service architecture.
 
+### 3. Network Hygiene & DNS Resolution (AdGuard Rewrite + Nginx Proxy Manager)
 As services multiplied, memorizing IPs and ports became annoying. I set up Nginx Proxy Manager and added DNS rewrite rules in AdGuard. Now typing `adguard.cihad.local` or `proxmox.cihad.local` was enough; DNS resolves it, NPM routes it to the right service. A simple setup, but it gave the infrastructure its first sense of *"an organized home."*
 
+### 4. Code Sovereignty & Local GitOps (Gitea)
 To version-control custom tools, automation scripts, and environment configs locally without relying on external cloud registries, I deployed a self-hosted Gitea instance. This kept all code assets fully on-premise while establishing a local webhook backbone for automated GitOps deployments.
 
+### 5. First Real Workload & Bot Bypass (N8N, Chrome CDP & RabbitMQ)
 A while later I needed to monitor a website regularly. Instead of checking manually, I set up N8N and wrote a workflow. I quickly hit a wall: the site had bot protection. The solution was to behave like a real browser. I tried connecting to an existing Chrome session via DevTools Protocol — it worked. As the load grew, I needed to queue jobs; I added RabbitMQ in between and turned a separate VM into a worker. This was the old PC's first *"real workload"* test, and it passed without complaint.
 
+### 6. Conversational Bridge in My Pocket (Hermes, Telegram & ngrok)
 I wanted results delivered to Telegram — which wasn't new to me. I'd already used simple Telegram notifications in an earlier project. But as things grew, a question stuck with me: could I send commands back, not just receive notifications? While researching Telegram-based remote control options, I found Hermes. Not just Telegram — a bridge that connects Discord, Signal, Slack, and Matrix all in one place, with custom commands on top. I set it up, tested it; it worked. The messaging app was already in my pocket; why open a separate panel?
 
 One day I needed to reach a VM from the office. The classic route was a VPN or leaving a port open permanently; both felt like unnecessary security risks. Instead, I wired up an ngrok + VNC integration: one Telegram message, and a time-limited connection URL arrived on my phone seconds later. When the session ended, the tunnel terminated cleanly without leaving any open attack surface.
 
+### 7. Multi-Model Orchestration & Fallback (9router Gateway)
 Around the same time, integrating AI models into the infrastructure highlighted another challenge: I was juggling multiple AI providers — Claude, Gemini, Groq, and several free-tier endpoints. Each had different rate limits, quotas, and distinct strengths. Manually switching when one hit its cap while trying to balance costs was becoming unsustainable. I initially wrote my own proxy. It worked for a while, but providers kept shifting their endpoint signatures and auth formats, making maintenance tedious. At that point, I discovered 9router — an open-source, MIT-licensed, OpenAI-compatible local gateway. Supporting 40+ providers with automated fallback and built-in token optimization, it solved the problem cleanly. I deployed it inside an LXC on Proxmox. Now all local tools and Hermes point to a single endpoint, while 9router handles provider routing dynamically.
 
+### 8. Persistent Semantic Memory (Mem0 + pgvector)
 There was one more friction point: every AI session started from zero. Yesterday's discussion and last week's architectural decisions vanished across sessions. Re-explaining context was both time-consuming and token-wasteful. Deploying Mem0 solved this completely: a self-hosted vector memory engine on PostgreSQL 17 + pgvector using Gemini embeddings for semantic search. Decisions and learned facts are persisted and recalled across sessions. I containerized it inside the `docker-host` LXC alongside 9router and Hermes.
 
-With dozens of services, containers, and a solid AI backbone operational, managing them through separate web dashboards and SSH terminals became the final bottleneck. Asking *"Can I unify this entire infrastructure into a single standard interface that AI agents can directly converse with and operate?"* led to **ProxmoxMCP**. Built with FastMCP and FastAPI, this control plane turned 60+ infrastructure operations (LXC/VM lifecycle, Docker workloads, AdGuard DNS rewrites, NPM proxy rules, and atomic 3-step service deployments) into standardized AI tools. Now, whether from desktop IDE agents (Antigravity, Kiro, Claude) or conversational Telegram messages, managing the entire homelab requires nothing more than natural language.
+### 9. The Unifying Control Plane (ProxmoxMCP)
+With dozens of services, containers, and a solid AI backbone operational, managing them through separate web dashboards and SSH terminals became the final bottleneck. AI models were "blind" to the live infrastructure. Asking *"Can I unify this entire infrastructure into a single standard interface that AI agents can directly converse with and operate?"* led to **ProxmoxMCP**. Built with FastMCP and FastAPI, this control plane turned 60+ infrastructure operations (LXC/VM lifecycle, Docker workloads, AdGuard DNS rewrites, NPM proxy rules, and atomic 3-step service deployments) into standardized AI tools. Now, whether from desktop IDE agents (Antigravity, Kiro, Claude) or conversational Telegram messages (Hermes), managing the entire homelab requires nothing more than natural language.
 
+### 10. Where It Stands Today: From Homelab to Enterprise-Ready Core
 Each solution created the next need. What I have now is infrastructure designed from scratch, managed with a single Telegram message or a conversation with an AI agent. Nothing was built speculatively. And that old PC is no longer just blocking ads — it's running as the brain of the house.
 
 And it doesn't stop at server administration; this centralized intelligence interconnects the entire living space. Running entirely on our self-sovereign Proxmox bare-metal stack without requiring external cloud subscriptions, public domains, or open ports, this architecture makes remarkable workflows possible on a daily basis — all fully operational:
