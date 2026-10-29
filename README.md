@@ -192,12 +192,34 @@ Credential yönetimi uygulama kodundan tamamen ayrı — merkezi bir secrets dos
 
 ## Sırada Ne Var? (Gelecek Vizyonu)
 
-Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunluğa ulaştırdı. Bir sonraki faz, sisteme insan müdahalesine gerek kalmadan çalışan **"otonom refleksler"** kazandırmayı hedefliyor:
+Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunluğa ulaştırdı. Bir sonraki faz; sunucu yönetiminin ötesine geçerek piyasadaki ticarileşmiş akıllı ev ekosistemlerini, tescilli marka duvarlarını, özel ESP32 donanımlarını ve bilgisayarlı görüyü bu merkezi sinir sistemine bağlamayı hedefliyor:
 
+### 1. Altyapı & Yazılım Refleksleri
 - 🛡️ **Kendi Yarasını Saran Altyapı (Self-Healing):** Bir serviste çökme veya bellek sızıntısı olduğunda; AI ajanının logları (`docker_logs`, `exec_in_container`) inceleyip kök nedeni bulması, konteyneri kurtarması ve Telegram'a teşhis/çözüm raporu iletmesi.
 - 🔄 **Yerel GitOps Döngüsü (Gitea Webhook → Otomatik Dağıtım):** Gitea'ya `git push` yapıldığı anda hiçbir panele girmeden Proxmox içindeki ilgili servisin otomatik build edilip canlıya alınması.
 - 🧠 **Mühendislik Hafızası & Kod Tabanı Arama (Codebase RAG):** Yıllar içinde yazılan tüm Delphi, Python ve altyapı kodlarının Mem0 + pgvector ile semantik olarak indekslenmesi; yeni bir iş yaparken geçmiş tecrübelerin anında bağlama çağrılabilmesi.
 - 🔐 **Kritik İşlemler İçin İnteraktif Onay (Telegram 2FA):** Altyapıyı etkileyecek hassas veya yıkıcı işlemler (`remove_resource`, yedek silme vb.) için Telegram üzerinden tek tıkla çalışan `[Onayla / İptal]` buton mekanizması.
+
+### 2. Ticarileşmiş Ekosistemler & Açık Protokol Entegrasyonu (No Vendor Lock-in)
+Piyasadaki akıllı cihazlar genellikle kullanıcıyı kendi kapalı bulut uygulamalarına mahkûm eder (Philips Hue, Tuya/Smart Life, Xiaomi/Aqara, Sonoff, Samsung SmartThings, LG ThinQ vb.). Hedef; standartlaşmış açık protokoller (**MQTT, Zigbee2MQTT, Matter/Thread, Home Assistant**) üzerinden tüm bu bağımsız dünyaları tek bir Telegram/Hermes kontrol düzleminde birleştirmektir:
+- **Aydınlatma & Enerji:** Philips Hue, Shelly ve Tuya rölelerinin marka farkı gözetmeksizin aynı mantıkla yönetilmesi.
+- **İklimlendirme:** Daikin, Mitsubishi, Arçelik klimalar veya Tado/Netatmo termostatların üretici sınırlarına takılmadan orkestre edilmesi.
+- **Ağ Donanımları:** Evdeki Keenetic, MikroTik, Ubiquiti UniFi veya ASUS router/AP'lerin API'leri üzerinden telemetri ve yönetim köprüsü.
+
+### 3. ESP32 ile "Akılsız" Cihazları Özgürleştirme
+Piyasadaki ticari üreticilerin izin vermediği veya fabrikasyon olarak akıllı özelliği bulunmayan cihazlar için **özel yapılandırılmış ESP32 mikrodenetleyicileri** (ESPHome / Tasmota tabanlı) devreye girer:
+- Standart bir split klimaya kızılötesi (IR) alıcı/verici ekleyerek üretici bulutuna ihtiyaç duymadan yerel Wi-Fi üzerinden tam kontrol sağlama.
+- Akıllı olmayan geleneksel garaj kapısı motorlarına, buzdolaplarına veya kombilere kuru kontak röleler ve sıcaklık/nem sensörleri (DHT22, BME280) ekleyerek üretici yazılımlarının hayal bile edemeyeceği özel senaryolar kurgulama.
+
+### 4. Bilgisayarlı Görü (Computer Vision) & AI Kamera Güvenliği
+- **Kamera Akışları (RTSP):** Hikvision, Dahua veya Reolink güvenlik kameralarından gelen canlı akışların yerel AI modelleriyle (YOLO, Frigate NVR) işlenmesi.
+- **Otomatik Plaka Tanıma (ALPR/ANPR):** Araç plakalarının gerçek zamanlı okunması; kullanıcı tanımlı beyaz liste (whitelist) ve kara liste (blacklist) kuralları ile fiziksel bariyerlerin tetiklenmesi.
+
+### 5. Gerçek Hayattan Senaryo Örnekleri ("Mesela...")
+- 🚗 **Mesela (Hikvision/Dahua Kamera + Akıllı Kapı + Telegram):** Akşam eve yaklaşırken kamera aile aracınızın plakasını (örn. `34 ABC 123`) okur; Shelly rölesine bağlı bahçe kapısı otomatik açılır, Philips Hue aydınlatmalar karşılama moduna geçer ve Telegram'a *"Eve hoş geldin"* mesajı gelir. Eğer kapının önünde kayıtsız yabancı bir araç duraklarsa, kapı açılmaz; anlık kamera karesiyle birlikte Telegram'a *"Bilinmeyen araç tespit edildi, bahçe kapısı açılsın mı? [Evet / Hayır]"* butonu gönderilir.
+- ❄️ **Mesela (Daikin/Mitsubishi Klima + Aqara Sensör + ESP32):** Üreticinin kapalı uygulamasının (Daikin ONE veya LG ThinQ) izin vermeyeceği çapraz ekosistem kuralı: Salondaki Aqara sıcaklık sensörü 27°C'yi geçtiğinde, odada hareket varsa ve AdGuard/UniFi üzerinden cep telefonunuzun ev ağında olduğu doğrulanmışsa; ESP32 IR köprüsü akılsız klimayı otomatik olarak eko modunda başlatır. Evden çıktığınızda ise unutulan klima kendiliğinden kapanır.
+- 📡 **Mesela (Keenetic / UniFi Router ile Otonom Ağ Sağlığı):** Salondaki UniFi Access Point veya Keenetic router'da paket kaybı veya ping yükselmesi algılandığında; sistem Telegram'dan *"Salondaki AP üzerinde yoğunluk tespit edildi, kanal optimizasyonu yapılsın mı? [Optimize Et / Yeniden Başlat]"* diye sorar ve tek tıkla müdahale eder.
+- 🧊 **Mesela (Samsung/Bosch Beyaz Eşya & Güvenlik):** Buzdolabına yerleştirilen kablosuz bir kapı sensörü kapının 3 dakikadan uzun süre açık kaldığını algılarsa veya elektrik tüketimi anormal bir zirve yaparsa; üretici bildirimine bağımlı kalmadan tüm aile bireylerinin Telegram hesabına yüksek öncelikli sesli uyarı düşer.
 
 ---
 
