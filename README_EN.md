@@ -25,9 +25,11 @@ The motivation was simple: content filtering for the kids and network-wide ad bl
 
 I installed AdGuard Home directly on the machine, no Proxmox yet. On the router, I changed the DNS address distributed via DHCP to AdGuard's IP. From that point, every phone, TV, computer, and guest's device was automatically filtered — no settings touched on any of them. This setup running on a few hundred MB of RAM was using almost none of the machine's capacity — and the rest of it sitting idle started to bother me. *"With this much capacity available, why just DNS?"* — that question was where everything began.
 
-I installed Proxmox on the machine. I configured the two SSDs as a ZFS mirror so that if one failed, the other would keep running with no data loss. Then I moved AdGuard into an LXC container; now I could run multiple isolated services on the same machine.
+I installed Proxmox VE on the machine. I configured the two SSDs as a ZFS mirror so that if one failed, the other would keep running with zero data loss. The primary reason for choosing Proxmox was the flexibility to run lightweight Linux LXC containers, Docker microservices, and full Windows virtual machines (VMs) for Delphi compilation and desktop testing side by side on the same bare metal. As the first step, I moved AdGuard into an LXC container; opening the door to a multi-service architecture.
 
 As services multiplied, memorizing IPs and ports became annoying. I set up Nginx Proxy Manager and added DNS rewrite rules in AdGuard. Now typing `adguard.cihad.local` or `proxmox.cihad.local` was enough; DNS resolves it, NPM routes it to the right service. A simple setup, but it gave the infrastructure its first sense of *"an organized home."*
+
+To version-control custom tools, automation scripts, and environment configs locally without relying on external cloud registries, I deployed a self-hosted Gitea instance. This kept all code assets fully on-premise while establishing a local webhook backbone for automated GitOps deployments.
 
 A while later I needed to monitor a website regularly. Instead of checking manually, I set up N8N and wrote a workflow. I quickly hit a wall: the site had bot protection. The solution was to behave like a real browser. I tried connecting to an existing Chrome session via DevTools Protocol — it worked. As the load grew, I needed to queue jobs; I added RabbitMQ in between and turned a separate VM into a worker. This was the old PC's first *"real workload"* test, and it passed without complaint.
 

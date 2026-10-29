@@ -25,9 +25,11 @@ Aslında ilk motivasyon basitti: çocuklar için içerik filtreleme ve evdeki t�
 
 AdGuard Home'u doğrudan o makineye kurdum, Proxmox falan yoktu henüz. Modem tarafında DHCP üzerinden dağıtılan DNS adresini AdGuard'ın IP'siyle değiştirdim. Böylece telefon, TV, bilgisayar, misafirin telefonu — hiçbir cihazda ayar yapmadan hepsi otomatik olarak reklamdan ve istenmeyen içerikten arındı. Birkaç yüz MB RAM'le çalışan bu kurulum makinenin kapasitesinin neredeyse hiçbirini kullanmıyordu. Ama makinenin geri kalan gücü boşta duruyordu ve bu beni rahatsız etmeye başladı. *"Madem bu kadar kaynak var, neden sadece DNS?"* sorusu her şeyin başlangıcı oldu.
 
-Makineye Proxmox kurdum. İki SSD'yi ZFS mirror olarak yapılandırdım — biri bozulsa bile sistem çalışmaya devam edecek, veri kaybı yaşanmayacaktı. Üzerine AdGuard'ı bir LXC konteynerine taşıdım; artık aynı makinede birden fazla izole servis çalıştırabilecektim.
+Makineye Proxmox VE kurdum. İki SSD'yi ZFS mirror olarak yapılandırdım — biri bozulsa bile sistem kesintisiz çalışmaya devam edecek, veri kaybı yaşanmayacaktı. Proxmox seçmemin asıl nedeni; hem hafif Linux LXC konteynerlerini ve Docker iş yüklerini, hem de Delphi derleme ve testleri için ihtiyaç duyduğum tam teşekküllü Windows sanal makinelerini (VM) aynı donanımda izole koşturabilmekti. İlk adım olarak AdGuard'ı bir LXC konteynerine taşıdım; böylece çoklu servis mimarisinin kapısını araladım.
 
 Servisler çoğaldıkça IP ve port ezberlemek can sıkıcı hâle geldi. Nginx Proxy Manager'ı kurdum, AdGuard'a DNS rewrite kuralları ekledim. Artık `adguard.cihad.local` ya da `proxmox.cihad.local` yazmak yetiyordu; DNS ismi çözüyor, NPM doğru servise yönlendiriyordu. Basit bir ayar, ama altyapıya ilk kez *"düzenli bir ev"* hissi verdi.
+
+Geliştirdiğim projeleri, otomasyon scriptlerini ve konfigürasyonları genel bulutlara emanet etmek yerine yerelde versiyonlamak için Gitea'yı kurdum. Böylece hem tüm kod tabanım kendi donanımımda güvende kaldı hem de ileride kuracağım otomatik dağıtımlar (GitOps) için yerel bir webhook omurgası oluştu.
 
 Bir süre sonra bir web sitesini düzenli takip etmem gerekti. Elle kontrol etmek yerine N8N kurdum ve workflow yazdım. Çok geçmeden duvara çarptım: site bot koruması uyguluyordu. Çözüm, gerçek bir tarayıcı gibi davranmaktı. Mevcut Chrome'a DevTools Protocol üzerinden bağlanmayı denedim ve çalıştı. Yük arttıkça işleri sıraya almak gerekti; araya RabbitMQ koydum, ayrı bir VM'i de worker yaptım. Eski PC için bu ilk *"gerçek iş yükü"* sınavıydı ve hiç şikayet etmeden geçti.
 
