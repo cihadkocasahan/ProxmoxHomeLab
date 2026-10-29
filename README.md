@@ -190,9 +190,11 @@ Credential yönetimi uygulama kodundan tamamen ayrı — merkezi bir secrets dos
 
 ---
 
-## Sırada Ne Var? (Gelecek Vizyonu)
+## Sırada Ne Var? (Gelecek Vizyonu: AI Destekli Merkezi Özelleştirme Paradigması)
 
-Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunluğa ulaştırdı. Bir sonraki faz; sunucu yönetiminin ötesine geçerek piyasadaki ticarileşmiş akıllı ev ekosistemlerini, tescilli marka duvarlarını, özel ESP32 donanımlarını ve bilgisayarlı görüyü bu merkezi sinir sistemine bağlamayı hedefliyor:
+Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunluğa ulaştırdı. Buradaki nihai amaç, piyasada tekil olarak zaten yapılabilen standart akıllı ev senaryolarını tekrarlamak değildir; **merkezi, uzaktan yönetilebilir, sıfır üretici bağımlılığı (vendor lock-in) barındıran ve yapay zeka destekli yepyeni bir özelleştirme ve kontrol mimarisi vizyonu** sunmaktır.
+
+Klasik otomasyonlarda kullanıcı onlarca kapalı mobil uygulama, karmaşık paneller veya statik kural blokları (if-this-then-that) arasında kaybolurken; bu mimaride tüm donanım ve yazılım katmanları **tek bir merkezi yapay zeka sinir sistemine** bağlanır. Sistem kullanıcının niyetini anlar, arka planda logları analiz edip kendi kendine koruma refleksleri üretir ve fiziksel/mantıksal tüm dünyayı tek bir konuşma arayüzünden sınırsızca kişiselleştirilebilir kılar.
 
 > **Temel Mimari Prensibi (Sıfır Ek Karmaşa, Maksimum Esneklik):**
 > - **Ek Donanım Gerekmeyen Durumlar:** Mantıksal kural tanımları, AdGuard DNS log analizi, dinamik çocuk koruması/içerik filtreleme, API tetikleyicileri ve uyarı sistemleri için hiçbir fiziksel donanım gerekmez; her şey doğrudan Telegram üzerinden doğal dille veya bot komutlarıyla yönetilir.
