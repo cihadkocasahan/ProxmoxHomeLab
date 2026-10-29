@@ -188,11 +188,6 @@ Mevcut yapı, altyapıyı **"komut alan ve konuşarak yönetilen"** bir olgunlu�
 
 ---
 
-## İlgili Projeler
-
-- **[Shadow-SVN](https://github.com/cihadkocasahan/shadow-svn)** — LXC 110'da çalışan SVN senkronizasyon motoru, açık kaynak.
-- **[Profile-PDF-Automator](https://github.com/cihadkocasahan/Profile-PDF-Automator)** — GitHub Actions ile Markdown'dan otomatik PDF CV üreten CI/CD pipeline.
-
 ## Taşınabilirlik: Sıfır PC'den Devam
 
 CihadEnv reposu Gitea'da barındırılıyor. Yeni bir makineye geçişte tek yapılacak: `git clone` + `.template` dosyalarını doldurmak. `.agents/` klasörü tüm AI davranış kurallarını, workflow tanımlarını ve standartları taşıyor — Kiro veya Claude anında aynı "zihinle" devam ediyor. Proxmox sunucusu zaten ayrı duruyor; servisler kesintisiz çalışmaya devam ediyor. Oturumlar arası hafıza Mem0'da saklanıyor — PC değişse de bağlam kaybolmuyor.

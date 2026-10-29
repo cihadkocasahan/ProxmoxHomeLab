@@ -198,11 +198,6 @@ The current implementation has matured the environment into a **"conversational,
 
 ---
 
-## Related Projects
-
-- **[Shadow-SVN](https://github.com/cihadkocasahan/shadow-svn)** — SVN sync engine running in LXC 110, open-sourced.
-- **[Profile-PDF-Automator](https://github.com/cihadkocasahan/Profile-PDF-Automator)** — GitHub Actions pipeline that auto-generates PDF resumes from Markdown.
-
 ## Portability: Continue from Any Machine
 
 The CihadEnv repository lives on Gitea. Moving to a new machine: `git clone` + fill in the `.template` files. The `.agents/` folder carries all AI behavior rules, workflow definitions, and standards — Kiro or Claude immediately continues with the same mindset. The Proxmox server stays separate; services keep running without interruption. Cross-session memory is stored in Mem0 — context doesn't disappear when the PC changes.
