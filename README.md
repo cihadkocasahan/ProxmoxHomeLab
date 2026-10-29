@@ -43,6 +43,15 @@ Artık elimde onlarca servis, konteyner ve güçlü bir AI omurgası vardı. Fak
 
 Her çözüm bir sonraki ihtiyacı doğurdu. Şu an elimde, tek bir Telegram mesajıyla ya da AI ajanıyla konuşarak yönetilen, sıfırdan tasarlanmış bir altyapı var. Hiçbir parça *"yapayım da dursun"* diye kurulmadı. Ve o eski PC artık sadece reklam engellemiyor — evin beyni olarak çalışıyor.
 
+İş sadece sunucu yönetmekle de sınırlı kalmıyor; bu merkezi akıl sayesinde evdeki tüm dinamikler birbiriyle konuşur hale geldi. Dışarıdan bakıldığında sıradan görünen bu bare-metal Proxmox yapısı; herhangi bir harici buluta, ücretli host'a veya açık portlara muhtaç olmadan inanılmaz senaryoları mümkün kılıyor — bunlar bile yapılabiliyor:
+- 🛡️ **Akıllı Ebeveyn Koruması:** Çocukların tabletlerinin AdGuard DNS sorguları arka planda AI tarafından periyodik taranıyor; reklam engelleyicilerin kaçırdığı yaşa uygunsuz siteler anında otonom engellenip Telegram'a bildiriliyor.
+- 🔥 **Kombi & Termostat Yönetimi (Doğalgaz Tasarrufu):** Evden çıkınca kombi otomatik ekonomi moduna geçiyor; Telegram'dan *"1 saate evdeyim"* dendiğinde konfor sıcaklığına getiriliyor, pencere açıldığında ısıtma durduruluyor.
+- 🚗 **Görüntü İşleme & Plaka Tanıma:** Kameralar aile aracının plakasını gördüğünde bahçe kapısını açıp karşılama ışıklarını yakıyor; yabancı bir araçta ise Telegram'a anlık kare gönderip onay istiyor.
+- ❄️ **Marka Bağımsız İklimlendirme:** Salondaki sıcaklık sensörü hareket algılayıp evde olunduğunu teyit ettiğinde, üretici uygulamasına ihtiyaç duymadan klima ESP32 köprüsüyle eko modda çalıştırılıyor.
+- 📡 **Otonom Ağ ve Cihaz Güvenliği:** Router'da ping veya gecikme yükseldiğinde kanal optimizasyonu tek tıkla yapılıyor; buzdolabı kapağı açık unutulduğunda tüm aileye Telegram'dan acil sesli uyarı düşüyor.
+
+Tüm bu sistem; ek bir donanım gerekmiyorsa sadece Telegram'dan bir cümleyle, donanım gerekiyorsa cihazların yerel Wi-Fi/LAN ağına bağlı olmasıyla, zamandan ve mekandan tamamen bağımsız olarak yönetilebiliyor. *(Bu senaryoların tüm mimari açılımları ve derinlemesine teknik detayları sayfanın devamında yer almaktadır.)*
+
 ---
 
 ## Altyapıya Genel Bakış

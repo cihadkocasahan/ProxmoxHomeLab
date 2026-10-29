@@ -43,6 +43,15 @@ With dozens of services, containers, and a solid AI backbone operational, managi
 
 Each solution created the next need. What I have now is infrastructure designed from scratch, managed with a single Telegram message or a conversation with an AI agent. Nothing was built speculatively. And that old PC is no longer just blocking ads — it's running as the brain of the house.
 
+And it doesn't stop at server administration; this centralized intelligence interconnects the entire living space. Running entirely on our self-sovereign Proxmox bare-metal stack without requiring external cloud subscriptions, public domains, or open ports, this architecture makes remarkable workflows possible on a daily basis — all fully operational:
+- 🛡️ **Intelligent Parental Protection:** Child tablet DNS query logs are continuously audited by local AI; emerging inappropriate domains that bypass static blocklists are autonomously blocked on AdGuard with instant parent alerts on Telegram.
+- 🔥 **Combi Boiler & Thermostat Orchestration:** Leaving home dials heating down to economy mode; texting *"Home in 1 hour"* brings it up to comfort temperature, while open window sensors pause heating to eliminate natural gas waste.
+- 🚗 **Computer Vision & License Plate Recognition:** Security cameras read family license plates to open motorized gates and set welcome lights, while unrecognized vehicles trigger instant photo verification prompts on Telegram.
+- ❄️ **Cross-Brand Climate Control:** When living room sensors detect heat and presence, legacy air conditioners trigger automatically via local ESP32 bridges without vendor app silos.
+- 📡 **Autonomous Network & Appliance Safeguards:** Network latency spikes on APs trigger one-tap auto-remediation; open refrigerator doors trigger urgent audible alerts to the family on Telegram.
+
+Whether an automation needs no extra hardware (pure software logic configured conversationally) or physical interaction (requiring only standard local Wi-Fi/LAN connectivity), everything is orchestrated anywhere, anytime, with zero cloud dependency. *(Full technical breakdowns and detailed walkthroughs are expanded further below.)*
+
 ---
 
 ## Infrastructure Overview
