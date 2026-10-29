@@ -204,6 +204,11 @@ Credential management is fully separated from application code — a central sec
 
 The current implementation has matured the environment into a **"conversational, command-driven"** control plane. The next phase expands beyond server infrastructure into commercial smart home ecosystems, physical IoT hardware, computer vision, and autonomous reflexes:
 
+> **Core Architectural Principle (Zero Friction, Maximum Flexibility):**
+> - **Software-Only & Logical Automations (No Extra Hardware Needed):** Rule evaluations, AdGuard DNS query log audits, dynamic parental filtering, API hooks, and alert dispatchers require zero additional hardware. Everything is configured and operated conversationally or via commands directly within Telegram.
+> - **Physical Hardware Workloads:** Target appliances (combi boilers, HVAC units, thermostats, lighting, routers, IP cameras) only need to be connected to the local network via Wi-Fi or wired LAN and support standard command interfaces (REST API, MQTT, HTTP, ONVIF, or custom ESP32 bridges).
+> - **Anywhere, Anytime Execution:** All automations and configurations can be provisioned and adjusted from anywhere in the world via Telegram — configured as scheduled routines (cron/n8n), sensor/event-triggered flows, or spontaneous, on-demand (ad-hoc) overrides.
+
 ### 1. Infrastructure & Software Reflexes
 - 🛡️ **Self-Healing Infrastructure:** In the event of service degradations or memory leaks, AI agents automatically inspect logs (`docker_logs`, `exec_in_container`), diagnose the root cause, restart the degraded service, and deliver a concise resolution report to Telegram.
 - 🔄 **Local GitOps Pipeline (Gitea Webhooks → Auto-Deploy):** Triggering zero-touch builds, tests, and container deployments directly on Proxmox upon every `git push` to Gitea, eliminating manual dashboard interaction.
@@ -226,7 +231,14 @@ For appliances lacking native smart connectivity or locked behind restrictive cl
 - **RTSP Camera Streams:** Ingesting local video feeds from Hikvision, Dahua, and Reolink security cameras into local vision models (YOLO, Frigate NVR).
 - **Automated License Plate Recognition (ALPR):** Real-time vehicle plate extraction matched against user-defined allowlists and blocklists to orchestrate physical gates and perimeter alerts.
 
-### 5. Real-World Walkthrough Scenarios ("For instance...")
+### 5. AI-Assisted Dynamic Parental Protection & Smart DNS Filtering
+Connecting directly back to the project's original genesis with AdGuard Home, AI analytics elevates static blocklists into proactive, adaptive protection:
+- **Static IP & MAC-Based Device Profiling:** Categorizing household hardware (children's tablets, school laptops, smart TVs, guest phones) via MAC addresses and DHCP leases into distinct AdGuard client profiles.
+- **Log Auditing & Semantic Risk Analysis:** Periodically scanning DNS query logs (`adguard_status`, query logs) for emerging, newly registered, or unclassified domains that bypass static commercial blocklists.
+- **Autonomous Rule Provisioning via Local LLMs:** When local models evaluate a domain as age-inappropriate, phishing, or predatory, they dynamically invoke `adguard_add_filter` and `adguard_set_custom_rules` to sever access and inform parents immediately.
+
+### 6. Real-World Walkthrough Scenarios ("For instance...")
+- 🛡️ **For instance (AdGuard + Static IP/MAC + AI Child Protection):** DNS queries from a child's dedicated tablet (identified by MAC address) are periodically audited in the background by the AI agent. When an unlisted gaming or pop-under domain (e.g., `game-reward-xyz.net`) surfaces that standard blocklists miss, the AI model identifies predatory data-collection patterns, dynamically injects a custom block rule into AdGuard, and pings parents on Telegram: *"Suspicious domain queried on Child's Tablet. Age-inappropriate redirect detected; domain autonomously blocked on AdGuard. [Unblock / Review]"*.
 - 🔥 **For instance (Combi Boiler & Smart Thermostat — Bosch/Vaillant + ESP32):** In winter, when you leave the house (phones disconnect from UniFi/AdGuard Wi-Fi), the boiler automatically drops to economy setpoint (18.5°C). Before heading home, messaging *"Home in 1 hour"* on Telegram triggers the ESP32 dry-contact bridge to warm the house to a comfortable 22°C. Overnight, the temperature dials back to 20.5°C. If a living room window contact sensor detects an open window, boiler firing pauses immediately with a Telegram alert: *"Living room window open, heating paused"*, cutting natural gas waste by 20-30% without sacrificing comfort.
 - 🚗 **For instance (Hikvision/Dahua Camera + Smart Gate + Telegram):** As you arrive home in the evening, the security camera scans your vehicle's plate (e.g., `34 ABC 123`); a Shelly relay triggers the motorized driveway gate, Philips Hue exterior lights shift to a warm welcome scene, and Telegram pings *"Welcome home."* If an unrecognized vehicle parks at the perimeter, the gate stays locked and an instant snapshot is dispatched to Telegram: *"Unrecognized vehicle detected. Open gate? [Yes / No]"*.
 - ❄️ **For instance (Daikin/Mitsubishi HVAC + Aqara Sensors + ESP32):** A cross-brand rule impossible within vendor apps: if an Aqara living room sensor registers >27°C, room motion is confirmed, and your phone is authenticated on the home Wi-Fi via UniFi/AdGuard, a custom ESP32 IR bridge powers on the legacy air conditioner in eco dehumidify mode. When you leave the house, the unit powers down automatically to eliminate waste.
