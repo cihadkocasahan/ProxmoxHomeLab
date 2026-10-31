@@ -294,7 +294,12 @@ Currently under active development and testing across donor physical PCs and sta
 
 The MyEnv repository lives on Gitea. Moving to a new machine: `git clone` + fill in the `.template` files. The `.agents/` folder carries all AI behavior rules, workflow definitions, and standards — Kiro or Claude immediately continues with the same mindset. The Proxmox server stays separate; services keep running without interruption. Cross-session memory is stored in Mem0 — context doesn't disappear when the PC changes.
 
-All credentials live in one place: `Master-Credentials.env`. ProxmoxMCP, Docker containers, LXC services, and Windows proxies all read from the same source. Never enters the repo — carried via `.template`.
+### Centralized Secrets & Vault Architecture: Single Source of Truth
+
+No component in the infrastructure (application code, bots, scripts) hardcodes passwords or API tokens:
+- **Single Source of Truth:** All credentials are consolidated in one centralized vault: Master-Credentials.env.
+- **Multi-Tier Consumption:** ProxmoxMCP (SecretManager), Docker containers (env_file), LXC services, and Windows proxies all consume from this single source.
+- **Zero Leakage & Portability:** Excluded via .gitignore — credentials never touch Git history. Transitioning to a new PC only requires filling in Master-Credentials.env.template. The backend storage layer can be transparently swapped with HashiCorp Vault or Infisical without altering application code.env`. ProxmoxMCP, Docker containers, LXC services, and Windows proxies all read from the same source. Never enters the repo — carried via `.template`.
 
 → Full technical details, MCP tool catalog, diagrams, and use case walkthroughs: **[DETAILS_EN.md](DETAILS_EN.md)**
 

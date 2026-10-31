@@ -284,7 +284,12 @@ Bu yapı her ne kadar bir ev laboratuvarında doğmuş olsa da; mimari olgunluğ
 
 MyEnv reposu Gitea'da barındırılıyor. Yeni bir makineye geçişte tek yapılacak: `git clone` + `.template` dosyalarını doldurmak. `.agents/` klasörü tüm AI davranış kurallarını, workflow tanımlarını ve standartları taşıyor — Kiro veya Claude anında aynı "zihinle" devam ediyor. Proxmox sunucusu zaten ayrı duruyor; servisler kesintisiz çalışmaya devam ediyor. Oturumlar arası hafıza Mem0'da saklanıyor — PC değişse de bağlam kaybolmuyor.
 
-Tüm credential'lar tek merkezde: `Master-Credentials.env`. ProxmoxMCP, Docker container'ları, LXC servisleri ve Windows proxy'leri hepsi aynı kaynaktan okuyor. Repoya girmiyor, `.template` ile taşınıyor.
+### Merkezi Secrets & Vault Mimarisi: Tek Doğru Kaynak
+
+Altyapıdaki hiçbir bileşen (uygulama kodları, botlar, scriptler) şifre veya API anahtarı içermez:
+- **Merkezi Vault Kaynağı:** Tüm credential'lar tek merkezde toplanmıştır: `Master-Credentials.env`.
+- **Çok Katmanlı Dağıtım:** ProxmoxMCP (`SecretManager`), Docker container'ları (`env_file`), LXC servisleri ve Windows proxy'leri hepsi aynı kaynaktan beslenir.
+- **Sıfır Sızıntı & Taşınabilirlik:** Bu dosya `.gitignore` kapsamındadır ve Git reposuna asla girmez. Yeni bir geliştirme makinesine geçildiğinde `Master-Credentials.env.template` dosyası doldurularak tüm sistem saniyeler içinde ayağa kalkar. Kod değişmeden arkadaki depolama katmanı HashiCorp Vault veya Infisical gibi kurumsal çözümlerle tak-çalıştır entegre edilebilir.
 
 → Tüm teknik detaylar, MCP araç kataloğu, diyagramlar ve senaryolar için: **[DETAILS.md](DETAILS.md)**
 
