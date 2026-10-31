@@ -19,9 +19,9 @@
 
 ---
 
-## How It Started: An Infrastructure Journey Born Out of Necessity
+## Infrastructure Architecture & Evolution
 
-### 1. The Spark (Ad Blocking & Content Filtering)
+### 1. Network-Level DNS & Content Filtering (AdGuard Home)
 The motivation was simple: content filtering for the kids and network-wide ad blocking for every device in the house, without configuring each one separately. There was an old PC gathering dust in a corner — instead of throwing it away, I decided to put it to use.
 
 I installed AdGuard Home directly on the machine, no Proxmox yet. On the router, I changed the DNS address distributed via DHCP to AdGuard's IP. From that point, every phone, TV, computer, and guest's device was automatically filtered — no settings touched on any of them. This setup running on a few hundred MB of RAM was using almost none of the machine's capacity — and the rest of it sitting idle started to bother me. *"With this much capacity available, why just DNS?"* — that question was where everything began.
