@@ -28,7 +28,7 @@ Proxmox VE — node: pv (192.168.1.123)
 ```mermaid
 graph TD
     ROUTER["Router · 192.168.1.1\nDHCP / NAT / Port Forwarding"]
-    AG["LXC 130 · AdGuard Home · 192.168.1.28\nDNS Resolver + Reklam/Tracker Engelleme\n*.cihad.local → NPM"]
+    AG["LXC 130 · AdGuard Home · 192.168.1.28\nDNS Resolver + Reklam/Tracker Engelleme\n*.homelab.local → NPM"]
     NPM["LXC 120 · Nginx Proxy Manager · 192.168.1.27\nReverse Proxy · SSL Sonlandırma"]
     SVCS["Tüm Servisler"]
     CLIENTS["Ev Cihazları · PC · Telefon · TV · IoT"]
@@ -44,7 +44,7 @@ graph TD
 Tüm ağın DNS sunucusu — her cihaz DNS için buraya bakıyor.
 
 - **Reklam/tracker engelleme:** Ağ genelinde, cihaz başına kurulum gerektirmez
-- **DNS rewrite:** `*.cihad.local` → `192.168.1.27` (NPM). Yeni servis = yeni rewrite kaydı
+- **DNS rewrite:** `*.homelab.local` → `192.168.1.27` (NPM). Yeni servis = yeni rewrite kaydı
 - **Özel filtre kuralları:** Kategori veya domain bazlı engelleme
 - **MCP ile yönetim:** `adguard_add_rewrite`, `adguard_set_custom_rules`, `adguard_set_protection`
 
@@ -56,14 +56,14 @@ Aktif proxy kuralları (canlı veriden):
 
 | Domain | Hedef | Port |
 |--------|-------|------|
-| `git.cihad.local` | 192.168.1.25 | 80 |
-| `svn.cihad.local` | 192.168.1.26 | 13081 |
-| `n8n.cihad.local` | 192.168.1.141 | 5678 |
-| `hermes.cihad.local` | 192.168.1.80 | 9119 |
-| `adguard.cihad.local` | 192.168.1.28 | 3000 |
-| `npm.cihad.local` | 192.168.1.27 | 81 |
-| `mcp.cihad.local` | 192.168.1.60 | 8000 |
-| `pv.cihad.local` | 192.168.1.123 | 8006 |
+| `git.homelab.local` | 192.168.1.25 | 80 |
+| `svn.homelab.local` | 192.168.1.26 | 13081 |
+| `n8n.homelab.local` | 192.168.1.141 | 5678 |
+| `hermes.homelab.local` | 192.168.1.80 | 9119 |
+| `adguard.homelab.local` | 192.168.1.28 | 3000 |
+| `npm.homelab.local` | 192.168.1.27 | 81 |
+| `mcp.homelab.local` | 192.168.1.60 | 8000 |
+| `pv.homelab.local` | 192.168.1.123 | 8006 |
 
 ---
 
@@ -76,7 +76,7 @@ graph LR
         CLAUDE["Claude Desktop"]
         AG2["Antigravity"]
         TG["Telegram · Hermes"]
-        BR["Tarayıcı · hermes.cihad.local"]
+        BR["Tarayıcı · hermes.homelab.local"]
     end
 
     subgraph PROXY["stdio Proxy Katmanı (Windows)"]
@@ -113,7 +113,7 @@ npm    = NPMManager(sm)
 gitea  = GiteaManager(sm)
 svn    = SVNManager(sm, exec_fn=client.exec_in_lxc)
 
-mcp = FastMCP("CihadEnv-Proxmox-MCP")
+mcp = FastMCP("HomeLab-Proxmox-MCP")
 register_all(mcp, pve, client, ag, npm, gitea, svn)
 ```
 
@@ -142,11 +142,11 @@ register_all(mcp, pve, client, ag, npm, gitea, svn)
 
 ```
 deploy_service(vmid=170, name="yeni-bot", ip="192.168.1.70",
-               domain="yeni-bot.cihad.local", forward_port=8080)
+               domain="yeni-bot.homelab.local", forward_port=8080)
 
 → [OK] LXC 170 oluşturuldu (192.168.1.70)
-→ [OK] DNS: yeni-bot.cihad.local → 192.168.1.27
-→ [OK] NPM: yeni-bot.cihad.local → 192.168.1.70:8080
+→ [OK] DNS: yeni-bot.homelab.local → 192.168.1.27
+→ [OK] NPM: yeni-bot.homelab.local → 192.168.1.70:8080
 ```
 
 | Araç | İşlev |
@@ -181,7 +181,7 @@ AI ajanları oturumlar arası bağlam burada saklar — sonraki oturumda geri ç
 graph LR
     subgraph OUTSIDE["Dışarıdan"]
         TG_APP["Telegram\nMobil / Masaüstü"]
-        BROWSER["Tarayıcı\nhermes.cihad.local :9119"]
+        BROWSER["Tarayıcı\nhermes.homelab.local :9119"]
     end
 
     subgraph LXC180["LXC 180 · hermes-agent · 2c/4GB"]
@@ -383,20 +383,20 @@ Mevcut bir Chrome oturumuna Chrome DevTools Protocol üzerinden bağlanmak, otom
 
 Kişisel geliştirme ortamları genellikle taşınamaz hale gelir. Hardcoded path'ler, makine başına dağılmış konfigürasyonlar, "bu sadece bende çalışır" durumu. Bir gün PC değiştiğinde ya da disk bozulduğunda yeniden kurmak saatler, bazen günler sürer.
 
-Bu sorunu kabul etmeyerek CihadEnv'i başından sona taşınabilirlik ilkesiyle tasarladım.
+Bu sorunu kabul etmeyerek MyEnv'i başından sona taşınabilirlik ilkesiyle tasarladım.
 
-### CihadEnv Mimarisi: Beyin + Beden
+### MyEnv Mimarisi: Beyin + Beden
 
 ```mermaid
 graph TD
-    subgraph REPO["CihadEnv Git Reposu\n(Gitea — LXC 100)"]
+    subgraph REPO["MyEnv Git Reposu\n(Gitea — LXC 100)"]
         BRAIN[".agents/\nTaşınabilir Akıl\nKurallar, standartlar, workflow'lar\nAI persona tanımları"]
         BODY["03_Workspaces/\nModüler Projeler\nHer proje kendi klasöründe izole\nProxmoxMCP, DelphiMCP, Scrapers..."]
         CONFIG["01_SystemConfig/\nŞablonlar ve config'ler\n.template uzantılı — makine spesifik değil"]
     end
 
     subgraph NEW_PC["Yeni Makine"]
-        GITEA_PULL["git clone\ngit.cihad.local/ckocasahan/CihadEnv"]
+        GITEA_PULL["git clone\ngit.homelab.local/developer/MyEnv"]
         READY["Tüm kurallar, workflow'lar\nAI standartları, araç setleri\nanında hazır"]
     end
 
@@ -412,7 +412,7 @@ graph TD
 - Encoding standartları
 - Anti-pattern listesi ve best practice'ler
 
-Bu klasörü yeni bir makineye kopyaladığında Kiro, Claude veya Antigravity aynı "CihadEnv aklıyla" çalışmaya devam eder — hiçbir şeyi yeniden anlatmak gerekmez.
+Bu klasörü yeni bir makineye kopyaladığında Kiro, Claude veya Antigravity aynı "MyEnv aklıyla" çalışmaya devam eder — hiçbir şeyi yeniden anlatmak gerekmez.
 
 ### Taşınabilirlik Kuralları
 
@@ -420,12 +420,12 @@ Bu klasörü yeni bir makineye kopyaladığında Kiro, Claude veya Antigravity a
 
 ```powershell
 # YASAK
-$path = "D:\CihadEnv\03_Workspaces\..."
+$path = "D:\MyEnv\03_Workspaces\..."
 
 # ZORUNLU
 $path = Join-Path $PSScriptRoot "..\03_Workspaces\..."
 # veya
-$path = Join-Path $env:USERPROFILE "CihadEnv\..."
+$path = Join-Path $env:USERPROFILE "MyEnv\..."
 ```
 
 **`.template` dosyaları.** Makine özgü konfigürasyonlar (IDE ayarları, MCP bağlantı bilgileri) `.template` uzantısıyla depoda tutulur. Yeni makinede template kopyalanıp makineye özel değerler girilir — repo temiz kalır.
@@ -446,7 +446,7 @@ sequenceDiagram
     ESK->>MEM: Kritik bağlam Mem0'da zaten kayıtlı\n(AI oturumlarından birikmiş)
 
     Note over YEN: Kurulum
-    YEN->>GIT: git clone CihadEnv
+    YEN->>GIT: git clone MyEnv
     YEN->>YEN: .template → .json kopyala\n(MCP bağlantıları, IDE ayarları)
     YEN->>YEN: pip install -e . (DelphiMCP)\npython proxy'leri yapılandır
 
@@ -731,7 +731,7 @@ Her MCP kendi alanında uzman; AI ajan ihtiyaca göre hangisine gideceğine kara
 
 **LXC 100 — 192.168.1.25 — 1c/1GB/30GB**
 
-Kişisel projeler, henüz GitHub'a gönderilmemiş çalışmalar ve kurumsal araçlar burada. Yerel ağdan `git.cihad.local`, dışarıdan Hermes tüneli üzerinden erişim.
+Kişisel projeler, henüz GitHub'a gönderilmemiş çalışmalar ve kurumsal araçlar burada. Yerel ağdan `git.homelab.local`, dışarıdan Hermes tüneli üzerinden erişim.
 
 Güçlü tarafı: AI ajan entegrasyonu. Telefon başındayken Hermes üzerinden ajana talimat verip bir repoda branch açtırabilir, commit yaptırabilir, webhook tetikletebilirim. Klonlanan bir test VM'inde sonucu görebiliyorum — PC başında olmak zorunlu değil.
 
@@ -775,7 +775,7 @@ graph TB
     H --> NG_C -.->|VNC| W
     AI --> PX -->|SSE| M
     M -->|API| PVE
-    R --> A -->|*.cihad.local| N --> PVE
+    R --> A -->|*.homelab.local| N --> PVE
     D -->|bildirim| H --> TG_C
     W <-->|kuyruk| D
     DO -.->|clone| W

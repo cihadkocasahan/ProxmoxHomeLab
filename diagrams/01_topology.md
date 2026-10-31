@@ -76,7 +76,7 @@ graph TB
 
     VM200 -->|clone_resource| VMSCRAPER
 
-    Browser(["Browser\n*.cihad.local"]) -->|DNS query| AG
+    Browser(["Browser\n*.homelab.local"]) -->|DNS query| AG
     AG -->|rewrite → NPM| NPM
     NPM -->|proxy| GIT & SVN & N8N & HRM & MCP
 ```

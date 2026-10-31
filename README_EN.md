@@ -32,7 +32,7 @@ While AdGuard was running smoothly, the pivotal catalyst that drove me to Proxmo
 The epiphany was clear: decouple heavy development workloads from client workstations and centralize them into a resilient, shared bare-metal server core. I installed Proxmox VE with dual SSDs in a ZFS mirror — guaranteeing zero data loss even in the event of hardware drive failure. Now, relational databases (MSSQL, PostgreSQL), Docker workloads, and full Windows VMs for Delphi compilation and desktop testing all lived in one isolated, high-performance node. No matter which laptop or desktop I sat down at, I connected to the identical centralized environment over the local network — drastically cutting repetitive setup effort while ensuring seamless synchronization across all workstations. As the initial milestone, I containerized AdGuard into an unprivileged LXC; officially opening the door to multi-service architecture.
 
 ### 3. Network Hygiene, IP Decoupling & DNS Resolution (AdGuard Rewrite + Nginx Proxy Manager)
-As services multiplied, memorizing raw IP addresses and ports became unsustainable. More critically, whenever a container was recreated or an IP changed, hardcoded connection strings and `.env` configs across multiple laptops would break. I deployed Nginx Proxy Manager and integrated DNS rewrite rules in AdGuard. Now, regardless of underlying dynamic IPs, pointing to `adguard.cihad.local` or `proxmox.cihad.local` was seamless; local DNS resolved the hostname, and NPM routed traffic securely with internal SSL. If a container IP shifted, updating NPM in one place fixed it everywhere, completely decoupling development workflows from physical IP changes. A simple setup, but it gave the infrastructure its first sense of *"an organized home."*
+As services multiplied, memorizing raw IP addresses and ports became unsustainable. More critically, whenever a container was recreated or an IP changed, hardcoded connection strings and `.env` configs across multiple laptops would break. I deployed Nginx Proxy Manager and integrated DNS rewrite rules in AdGuard. Now, regardless of underlying dynamic IPs, pointing to `adguard.homelab.local` or `proxmox.homelab.local` was seamless; local DNS resolved the hostname, and NPM routed traffic securely with internal SSL. If a container IP shifted, updating NPM in one place fixed it everywhere, completely decoupling development workflows from physical IP changes. A simple setup, but it gave the infrastructure its first sense of *"an organized home."*
 
 ### 4. Code Sovereignty & Local GitOps (Gitea)
 To version-control custom tools, automation scripts, and environment configs locally without relying on external cloud registries, I deployed a self-hosted Gitea instance. This kept all code assets fully on-premise while establishing a local webhook backbone for automated GitOps deployments.
@@ -108,7 +108,7 @@ graph TB
     MCP -->|proxmoxer API| PVE
     MCP --> AG & NPM & DOCKER & GIT & SVN2
 
-    ROUTER --> AG -->|*.cihad.local| NPM --> PVE
+    ROUTER --> AG -->|*.homelab.local| NPM --> PVE
     DONORS -.->|clone| VM201
     DOCKER -->|notification| HRM
 ```
@@ -119,7 +119,7 @@ graph TB
 
 ### Full Control From Anywhere
 
-From Telegram or a browser (`hermes.cihad.local`), regardless of whether I'm at home:
+From Telegram or a browser (`hermes.homelab.local`), regardless of whether I'm at home:
 
 - Start and stop any VM or LXC
 - Deploy a new service (LXC + DNS + proxy in a single step)
@@ -142,7 +142,7 @@ Website testing, app trials, Docker stack experiments — each in an isolated, t
 
 ### Personal Git Server and AI-Assisted Code Changes
 
-I keep local projects on Gitea (`git.cihad.local`). From my phone via Hermes, I can instruct an AI agent to open a branch, apply changes, run the pre-commit guard, and commit — then check the result in a cloned test VM. No desk required.
+I keep local projects on Gitea (`git.homelab.local`). From my phone via Hermes, I can instruct an AI agent to open a branch, apply changes, run the pre-commit guard, and commit — then check the result in a cloned test VM. No desk required.
 
 This is powered by **DelphiMCP** for Delphi projects — a purpose-built MCP server that gives AI agents actual semantic understanding of Delphi code: 5 specialized servers, 108 tools, blast radius analysis before any change, automatic UTF-8 BOM enforcement, MSBuild integration, and a Telegram approval gate before anything gets committed. The same pattern applies to any stack.
 
@@ -159,7 +159,7 @@ I prefer the system alerting me over manually checking things. Active scenarios:
 
 ### Personal Git Server
 
-I keep local projects on Gitea. Accessible at `git.cihad.local` on the local network, or through a Hermes tunnel from outside. From my phone, I can instruct an AI agent via Hermes to make changes to a repo, then check the result in a cloned test VM — no need to be at a desk.
+I keep local projects on Gitea. Accessible at `git.homelab.local` on the local network, or through a Hermes tunnel from outside. From my phone, I can instruct an AI agent via Hermes to make changes to a repo, then check the result in a cloned test VM — no need to be at a desk.
 
 ### Data Security and Backups
 
@@ -292,7 +292,7 @@ Currently under active development and testing across donor physical PCs and sta
 
 ## Portability: Continue from Any Machine
 
-The CihadEnv repository lives on Gitea. Moving to a new machine: `git clone` + fill in the `.template` files. The `.agents/` folder carries all AI behavior rules, workflow definitions, and standards — Kiro or Claude immediately continues with the same mindset. The Proxmox server stays separate; services keep running without interruption. Cross-session memory is stored in Mem0 — context doesn't disappear when the PC changes.
+The MyEnv repository lives on Gitea. Moving to a new machine: `git clone` + fill in the `.template` files. The `.agents/` folder carries all AI behavior rules, workflow definitions, and standards — Kiro or Claude immediately continues with the same mindset. The Proxmox server stays separate; services keep running without interruption. Cross-session memory is stored in Mem0 — context doesn't disappear when the PC changes.
 
 All credentials live in one place: `Master-Credentials.env`. ProxmoxMCP, Docker containers, LXC services, and Windows proxies all read from the same source. Never enters the repo — carried via `.template`.
 

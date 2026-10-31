@@ -28,7 +28,7 @@ Proxmox VE — node: pv (192.168.1.123)
 ```mermaid
 graph TD
     ROUTER["Router · 192.168.1.1\nDHCP / NAT / Port Forwarding"]
-    AG["LXC 130 · AdGuard Home · 192.168.1.28\nDNS Resolver + Ad/Tracker Blocking\n*.cihad.local → NPM"]
+    AG["LXC 130 · AdGuard Home · 192.168.1.28\nDNS Resolver + Ad/Tracker Blocking\n*.homelab.local → NPM"]
     NPM["LXC 120 · Nginx Proxy Manager · 192.168.1.27\nReverse Proxy · SSL Termination"]
     SVCS["All Services"]
     CLIENTS["Home Devices · PC · Phone · TV · IoT"]
@@ -44,7 +44,7 @@ graph TD
 DNS server for the entire network — every device points here.
 
 - **Ad/tracker blocking:** Network-wide, no per-device setup
-- **DNS rewrites:** `*.cihad.local` → `192.168.1.27` (NPM). New service = new rewrite record
+- **DNS rewrites:** `*.homelab.local` → `192.168.1.27` (NPM). New service = new rewrite record
 - **Custom filter rules:** Category or domain-level blocking
 - **MCP management:** `adguard_add_rewrite`, `adguard_set_custom_rules`, `adguard_set_protection`
 
@@ -56,14 +56,14 @@ Active proxy rules (from live data):
 
 | Domain | Target | Port |
 |--------|--------|------|
-| `git.cihad.local` | 192.168.1.25 | 80 |
-| `svn.cihad.local` | 192.168.1.26 | 13081 |
-| `n8n.cihad.local` | 192.168.1.141 | 5678 |
-| `hermes.cihad.local` | 192.168.1.80 | 9119 |
-| `adguard.cihad.local` | 192.168.1.28 | 3000 |
-| `npm.cihad.local` | 192.168.1.27 | 81 |
-| `mcp.cihad.local` | 192.168.1.60 | 8000 |
-| `pv.cihad.local` | 192.168.1.123 | 8006 |
+| `git.homelab.local` | 192.168.1.25 | 80 |
+| `svn.homelab.local` | 192.168.1.26 | 13081 |
+| `n8n.homelab.local` | 192.168.1.141 | 5678 |
+| `hermes.homelab.local` | 192.168.1.80 | 9119 |
+| `adguard.homelab.local` | 192.168.1.28 | 3000 |
+| `npm.homelab.local` | 192.168.1.27 | 81 |
+| `mcp.homelab.local` | 192.168.1.60 | 8000 |
+| `pv.homelab.local` | 192.168.1.123 | 8006 |
 
 ---
 
@@ -76,7 +76,7 @@ graph LR
         CLAUDE["Claude Desktop"]
         AG2["Antigravity"]
         TG["Telegram · Hermes"]
-        BR["Browser · hermes.cihad.local"]
+        BR["Browser · hermes.homelab.local"]
     end
 
     subgraph PROXY["stdio Proxy Layer (Windows)"]
@@ -113,7 +113,7 @@ npm    = NPMManager(sm)
 gitea  = GiteaManager(sm)
 svn    = SVNManager(sm, exec_fn=client.exec_in_lxc)
 
-mcp = FastMCP("CihadEnv-Proxmox-MCP")
+mcp = FastMCP("HomeLab-Proxmox-MCP")
 register_all(mcp, pve, client, ag, npm, gitea, svn)
 ```
 
@@ -142,11 +142,11 @@ register_all(mcp, pve, client, ag, npm, gitea, svn)
 
 ```
 deploy_service(vmid=170, name="new-bot", ip="192.168.1.70",
-               domain="new-bot.cihad.local", forward_port=8080)
+               domain="new-bot.homelab.local", forward_port=8080)
 
 → [OK] LXC 170 created (192.168.1.70)
-→ [OK] DNS: new-bot.cihad.local → 192.168.1.27
-→ [OK] NPM: new-bot.cihad.local → 192.168.1.70:8080
+→ [OK] DNS: new-bot.homelab.local → 192.168.1.27
+→ [OK] NPM: new-bot.homelab.local → 192.168.1.70:8080
 ```
 
 | Tool | Function |
@@ -181,7 +181,7 @@ AI agents store cross-session context here — retrieved in the next session.
 graph LR
     subgraph OUTSIDE["External"]
         TG_APP["Telegram\nMobile / Desktop"]
-        BROWSER["Browser\nhermes.cihad.local :9119"]
+        BROWSER["Browser\nhermes.homelab.local :9119"]
     end
 
     subgraph LXC180["LXC 180 · hermes-agent · 2c/4GB"]
@@ -383,20 +383,20 @@ Connecting to an existing Chrome session via Chrome DevTools Protocol makes the 
 
 Personal development environments tend to become immovable. Hardcoded paths, configurations scattered across machines, the "it only works on my machine" situation. When a PC changes or a disk fails, rebuilding takes hours or days.
 
-I refused to accept this and designed CihadEnv with portability as a first principle from the beginning.
+I refused to accept this and designed MyEnv with portability as a first principle from the beginning.
 
-### CihadEnv Architecture: Brain + Body
+### MyEnv Architecture: Brain + Body
 
 ```mermaid
 graph TD
-    subgraph REPO["CihadEnv Git Repository\n(Gitea — LXC 100)"]
+    subgraph REPO["MyEnv Git Repository\n(Gitea — LXC 100)"]
         BRAIN[".agents/\nPortable Intelligence\nRules, standards, workflows\nAI persona definitions"]
         BODY["03_Workspaces/\nModular Projects\nEach project isolated in its own folder\nProxmoxMCP, DelphiMCP, Scrapers..."]
         CONFIG["01_SystemConfig/\nTemplates and configs\n.template extension — not machine-specific"]
     end
 
     subgraph NEW_PC["New Machine"]
-        GITEA_PULL["git clone\ngit.cihad.local/ckocasahan/CihadEnv"]
+        GITEA_PULL["git clone\ngit.homelab.local/developer/MyEnv"]
         READY["All rules, workflows\nAI standards, tool sets\nimmediately ready"]
     end
 
@@ -412,7 +412,7 @@ graph TD
 - Encoding standards
 - Anti-pattern lists and best practices
 
-Clone this folder to a new machine and Kiro, Claude, or Antigravity immediately operates with the same "CihadEnv mindset" — nothing needs to be re-explained.
+Clone this folder to a new machine and Kiro, Claude, or Antigravity immediately operates with the same "MyEnv mindset" — nothing needs to be re-explained.
 
 ### Portability Rules
 
@@ -420,12 +420,12 @@ Clone this folder to a new machine and Kiro, Claude, or Antigravity immediately 
 
 ```powershell
 # FORBIDDEN
-$path = "D:\CihadEnv\03_Workspaces\..."
+$path = "D:\MyEnv\03_Workspaces\..."
 
 # REQUIRED
 $path = Join-Path $PSScriptRoot "..\03_Workspaces\..."
 # or
-$path = Join-Path $env:USERPROFILE "CihadEnv\..."
+$path = Join-Path $env:USERPROFILE "MyEnv\..."
 ```
 
 **`.template` files.** Machine-specific configurations (IDE settings, MCP connection details) are kept in the repo with a `.template` extension. On a new machine, the template is copied and machine-specific values are filled in — the repo stays clean.
@@ -446,7 +446,7 @@ sequenceDiagram
     OLD->>MEM: Critical context already in Mem0\n(accumulated from AI sessions)
 
     Note over NEW: Setup
-    NEW->>GIT: git clone CihadEnv
+    NEW->>GIT: git clone MyEnv
     NEW->>NEW: .template → .json copy\n(MCP connections, IDE settings)
     NEW->>NEW: pip install -e . (DelphiMCP)\nconfigure proxy scripts
 
@@ -729,7 +729,7 @@ Each MCP is a specialist in its own domain; the AI agent decides which one to ca
 
 **LXC 100 — 192.168.1.25 — 1c/1GB/30GB**
 
-Personal projects, works-in-progress not yet ready for GitHub, and internal tooling. Accessible at `git.cihad.local` on the local network, or through a Hermes tunnel from outside.
+Personal projects, works-in-progress not yet ready for GitHub, and internal tooling. Accessible at `git.homelab.local` on the local network, or through a Hermes tunnel from outside.
 
 The strong point is AI agent integration. From my phone via Hermes, I can instruct an agent to open a branch, make commits, or trigger a webhook on a repo — then verify the result in a cloned test VM. No need to be at a desk.
 
@@ -773,7 +773,7 @@ graph TB
     H --> NG_C -.->|VNC| W
     AI --> PX -->|SSE| M
     M -->|API| PVE
-    R --> A -->|*.cihad.local| N --> PVE
+    R --> A -->|*.homelab.local| N --> PVE
     D -->|notification| H --> TG_C
     W <-->|queue| D
     DO -.->|clone| W

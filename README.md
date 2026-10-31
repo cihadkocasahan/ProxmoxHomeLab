@@ -32,7 +32,7 @@ AdGuard tek başına tıkır tıkır çalışırken beni Proxmox'a iten asıl ca
 Çözüm; tüm bu geliştirme iş yüklerini kişisel bilgisayarlarımdan söküp alacak merkezi ve dayanıklı bir sunucu omurgası kurmaktı. İki SSD'yi ZFS mirror yapılandırarak makineye Proxmox VE kurdum — böylece disklerden biri bozulsa bile sistem kesintisiz çalışacak, sıfır veri kaybı yaşanacaktı. Artık MSSQL'i de PostgreSQL'i de Docker iş yüklerini de ve Delphi derleme/testleri için ihtiyaç duyduğum tam teşekküllü Windows sanal makinelerini de tek bir merkezde izole olarak koşturabiliyordum. Hangi laptopu açarsam açayım, hepsi ağ üzerinden aynı merkezi ortama bağlanıyor; harcanan efor ciddi şekilde azalırken tüm ortamlar arasında kusursuz bir senkronizasyon sağlanıyordu. İlk adım olarak AdGuard'ı da bir LXC konteynerine taşıdım; böylece çoklu servis mimarisi resmen başlamış oldu.
 
 ### 3. Ağ Düzeni, IP Bağımsızlığı & İsim Çözümleme (AdGuard DNS Rewrite + Nginx Proxy Manager)
-Servisler çoğaldıkça IP ve port ezberlemek can sıkıcı hâle geldi. Daha da önemlisi; konteynerlerin IP adresleri veya portları değiştiğinde tüm laptoplardaki bağlantı ayarlarının, `.env` dosyalarının ve kodların bozulması riski vardı. Nginx Proxy Manager'ı kurdum ve AdGuard'a DNS rewrite kuralları ekledim. Artık fiziksel IP ne olursa olsun `adguard.cihad.local` ya da `proxmox.cihad.local` yazmak yetiyordu; DNS ismi çözüyor, NPM arka planda IP değişse bile trafiği doğru servise SSL ile yönlendiriyordu. Bir IP değiştiğinde onlarca makinede ayar değiştirmek yerine sadece NPM'de tek bir yeri güncellemek yetti. Basit bir ayardı ama altyapıya ilk kez *"düzenli bir ev"* hissi verdi.
+Servisler çoğaldıkça IP ve port ezberlemek can sıkıcı hâle geldi. Daha da önemlisi; konteynerlerin IP adresleri veya portları değiştiğinde tüm laptoplardaki bağlantı ayarlarının, `.env` dosyalarının ve kodların bozulması riski vardı. Nginx Proxy Manager'ı kurdum ve AdGuard'a DNS rewrite kuralları ekledim. Artık fiziksel IP ne olursa olsun `adguard.homelab.local` ya da `proxmox.homelab.local` yazmak yetiyordu; DNS ismi çözüyor, NPM arka planda IP değişse bile trafiği doğru servise SSL ile yönlendiriyordu. Bir IP değiştiğinde onlarca makinede ayar değiştirmek yerine sadece NPM'de tek bir yeri güncellemek yetti. Basit bir ayardı ama altyapıya ilk kez *"düzenli bir ev"* hissi verdi.
 
 ### 4. Kod Güvenliği & Yerel GitOps (Gitea)
 Geliştirdiğim projeleri, otomasyon scriptlerini ve konfigürasyonları genel bulutlara emanet etmek yerine yerelde versiyonlamak için Gitea sunucusunu kurdum. Böylece hem tüm kod tabanım kendi donanımımda güvende kaldı hem de ileride kuracağım otomatik dağıtımlar (GitOps) için yerel bir webhook omurgası oluştu.
@@ -108,7 +108,7 @@ graph TB
     MCP -->|proxmoxer API| PVE
     MCP --> AG & NPM & DOCKER & GIT & SVN2
 
-    ROUTER --> AG -->|*.cihad.local| NPM --> PVE
+    ROUTER --> AG -->|*.homelab.local| NPM --> PVE
     DONORS -.->|clone| VM201
     DOCKER -->|bildirim| HRM
 ```
@@ -119,7 +119,7 @@ graph TB
 
 ### Herhangi Bir Yerden Tam Kontrol
 
-Telegram veya tarayıcı (`hermes.cihad.local`) üzerinden, evde olup olmadığımdan bağımsız olarak:
+Telegram veya tarayıcı (`hermes.homelab.local`) üzerinden, evde olup olmadığımdan bağımsız olarak:
 
 - İstediğim VM veya LXC'yi başlatıp durdurmak
 - Yeni servis deploy etmek (LXC oluşturma + DNS + proxy tek adımda)
@@ -152,7 +152,7 @@ Elle kontrol etmek yerine sistemin beni uyarmasını tercih ederim. Aktif kullan
 
 ### Kişisel Git Sunucusu
 
-Gitea'da yerel projelerimi tutuyorum. Yerel ağdan `git.cihad.local` ile, dışarıdan Hermes tüneli üzerinden erişiyorum. Telefon başındayken Hermes aracılığıyla AI ajana talimat verip repo üzerinde değişiklik yaptırabiliyorum, klonlanan test VM'inde sonucu görebiliyorum — PC başında olmak zorunlu değil.
+Gitea'da yerel projelerimi tutuyorum. Yerel ağdan `git.homelab.local` ile, dışarıdan Hermes tüneli üzerinden erişiyorum. Telefon başındayken Hermes aracılığıyla AI ajana talimat verip repo üzerinde değişiklik yaptırabiliyorum, klonlanan test VM'inde sonucu görebiliyorum — PC başında olmak zorunlu değil.
 
 ### DelphiMCP: Delphi Geliştirme için AI Köprüsü
 
@@ -282,7 +282,7 @@ Bu yapı her ne kadar bir ev laboratuvarında doğmuş olsa da; mimari olgunluğ
 
 ## Taşınabilirlik: Sıfır PC'den Devam
 
-CihadEnv reposu Gitea'da barındırılıyor. Yeni bir makineye geçişte tek yapılacak: `git clone` + `.template` dosyalarını doldurmak. `.agents/` klasörü tüm AI davranış kurallarını, workflow tanımlarını ve standartları taşıyor — Kiro veya Claude anında aynı "zihinle" devam ediyor. Proxmox sunucusu zaten ayrı duruyor; servisler kesintisiz çalışmaya devam ediyor. Oturumlar arası hafıza Mem0'da saklanıyor — PC değişse de bağlam kaybolmuyor.
+MyEnv reposu Gitea'da barındırılıyor. Yeni bir makineye geçişte tek yapılacak: `git clone` + `.template` dosyalarını doldurmak. `.agents/` klasörü tüm AI davranış kurallarını, workflow tanımlarını ve standartları taşıyor — Kiro veya Claude anında aynı "zihinle" devam ediyor. Proxmox sunucusu zaten ayrı duruyor; servisler kesintisiz çalışmaya devam ediyor. Oturumlar arası hafıza Mem0'da saklanıyor — PC değişse de bağlam kaybolmuyor.
 
 Tüm credential'lar tek merkezde: `Master-Credentials.env`. ProxmoxMCP, Docker container'ları, LXC servisleri ve Windows proxy'leri hepsi aynı kaynaktan okuyor. Repoya girmiyor, `.template` ile taşınıyor.
 
